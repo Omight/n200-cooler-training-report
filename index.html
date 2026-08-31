@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>N-200 Cooler Training Report V1</title><style>
+<title>N-200 Cooler Training Report V2</title><style>
 body{font-family:Arial;margin:0;background:#f4f6f8;color:#17202a}header{background:#17202a;color:white;padding:18px}nav{display:flex;overflow:auto;gap:5px;padding:9px;background:white;position:sticky;top:0}nav button,.btn{border:0;border-radius:8px;padding:11px;font-weight:bold}.btn{width:100%;background:#1769d2;color:white;margin-top:10px}nav button.on{background:#1769d2;color:white}.tab{display:none}.tab.on{display:block}main{max-width:820px;margin:auto;padding:12px}.card{background:white;border:1px solid #ccd3dc;border-radius:12px;padding:14px;margin-bottom:12px}label{display:block;font-weight:bold;font-size:13px;margin:10px 0 4px}input,select,textarea{width:100%;padding:10px;border:1px solid #aeb7c4;border-radius:8px;font-size:16px;box-sizing:border-box}textarea{min-height:80px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.out{white-space:pre-wrap;background:#f8fafc;border:1px solid #ccd3dc;padding:12px;border-radius:8px;margin-top:10px}.row{border-top:1px solid #ddd;padding:9px 0}.check{display:flex;gap:8px;margin:10px 0}.check input{width:20px}.check label{margin:1px 0;font-weight:normal}.note{font-size:13px;color:#667085}@media(max-width:550px){.grid{grid-template-columns:1fr}}
 </style></head><body><header><h2>N-200 Cooler Forklift Training & Load Report</h2></header>
 <nav><button class="on" data-t="start">Beginning Shift</button><button data-t="load">Load Report</button><button data-t="train">Training</button><button data-t="clean">Cleaning</button><button data-t="email">Email</button><button data-t="setup">Setup</button></nav><main>
@@ -7,7 +7,7 @@ body{font-family:Arial;margin:0;background:#f4f6f8;color:#17202a}header{backgrou
 <section id="start" class="tab on"><div class="card"><h3>Beginning of Shift</h3>
 <div class="grid"><div><label>Date</label><input id="date" type="date"></div><div><label>Reported by</label><input id="reporter"></div></div>
 <label>Loads for the day</label><input id="loads" type="number"><div class="grid"><div><label>Maola trailers needed</label><input id="maola" type="number"></div><div><label>Food Lion trailers needed</label><input id="foodlion" type="number"></div></div>
-<label>Notes</label><textarea id="startnotes"></textarea><button class="btn" onclick="startText()">Build Text</button><div id="startout" class="out"></div><button class="btn" onclick="copy('startout')">Copy Text</button></div></section>
+<label>Notes</label><textarea id="startnotes"></textarea><button class="btn" onclick="startText()">Build Text</button><div id="startout" class="out"></div><button class="btn" onclick="copy('startout')">Copy Text</button><button class="btn" onclick="shareText('startout','N-200 Cooler Beginning Shift Report')">Share Text</button></div></section>
 
 <section id="load" class="tab"><div class="card"><h3>Load Report</h3>
 <div class="grid"><div><label>Truck / Trailer #</label><input id="truck"></div><div><label>Destination</label><select id="dest"></select></div></div>
@@ -15,13 +15,13 @@ body{font-family:Arial;margin:0;background:#f4f6f8;color:#17202a}header{backgrou
 <div class="grid"><div><label>Loaded by</label><input id="by"></div><div><label>Truck temperature °F</label><input id="temp" type="number" step=".1"></div></div>
 <p class="note">Trailer temperature should be below 34°F before loading.</p><div id="products"></div>
 <label>Cases lost</label><input id="lost" type="number" value="0"><label>Notes</label><textarea id="lnotes"></textarea>
-<button class="btn" onclick="saveLoad()">Save Load & Build Text</button><div id="loadout" class="out"></div><button class="btn" onclick="copy('loadout')">Copy Load Text</button></div>
+<button class="btn" onclick="saveLoad()">Save Load & Build Text</button><div id="loadout" class="out"></div><button class="btn" onclick="copy('loadout')">Copy Load Text</button><button class="btn" onclick="shareText('loadout','N-200 Cooler Load Report')">Share Load Text</button></div>
 <div class="card"><h3>Loads This Shift</h3><div id="loadlist"></div></div></section>
 
 <section id="train" class="tab"><div class="card"><h3>Forklift Training</h3>
 <div class="grid"><div><label>Operator</label><input id="operator"></div><div><label>Trainer</label><input id="trainer"></div></div><label>Date / time</label><input id="ttime" type="datetime-local"><div id="checks"></div>
 <label>Picture</label><input id="photo" type="file" accept="image/*" capture="environment"><p class="note">The text report will say “Picture in text thread.”</p>
-<label>Notes</label><textarea id="tnotes"></textarea><button class="btn" onclick="saveTrain()">Save Training & Build Text</button><div id="trainout" class="out"></div><button class="btn" onclick="copy('trainout')">Copy Training Text</button></div>
+<label>Notes</label><textarea id="tnotes"></textarea><button class="btn" onclick="saveTrain()">Save Training & Build Text</button><div id="trainout" class="out"></div><button class="btn" onclick="copy('trainout')">Copy Training Text</button><button class="btn" onclick="shareTraining()">Share Training</button></div>
 <div class="card"><h3>Training This Shift</h3><div id="trainlist"></div></div></section>
 
 <section id="clean" class="tab"><div class="card"><h3>Cooler Cleaning Log</h3><label>Area</label><select id="area"></select>
@@ -30,7 +30,7 @@ body{font-family:Arial;margin:0;background:#f4f6f8;color:#17202a}header{backgrou
 
 <section id="email" class="tab"><div class="card"><h3>End-of-Shift Email</h3><div class="grid"><div><label>To</label><input id="to"></div><div><label>CC</label><input id="cc"></div></div>
 <label>Subject</label><input id="subject" value="N-200 Cooler Forklift / Load Report"><label>Additional notes</label><textarea id="enotes"></textarea>
-<button class="btn" onclick="emailText()">Build Email</button><div id="emailout" class="out"></div><button class="btn" onclick="mail()">Open Email App</button><button class="btn" onclick="copy('emailout')">Copy Email</button></div></section>
+<button class="btn" onclick="emailText()">Build Email</button><div id="emailout" class="out"></div><button class="btn" onclick="mail()">Open Email App</button><button class="btn" onclick="copy('emailout')">Copy Email</button><button class="btn" onclick="shareText('emailout','N-200 Cooler Forklift / Load Report')">Share Email</button></div></section>
 
 <section id="setup" class="tab"><div class="card"><h3>Editable Destinations</h3><div class="grid"><input id="newdest" placeholder="Columbia, Winston Salem, etc."><button class="btn" onclick="addDest()">Add Destination</button></div><div id="destlist"></div></div>
 <div class="card"><h3>Editable Products</h3><div class="grid"><input id="newprod" placeholder="New product"><button class="btn" onclick="addProd()">Add Product</button></div><div id="prodlist"></div></div>
@@ -46,6 +46,23 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.query
 function F(v){return v?new Date(v).toLocaleString([], {month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'}):''}
 function D(a,b){if(!a||!b)return'';let m=Math.round((new Date(b)-new Date(a))/60000);if(m<0)return'';return m>=60?Math.floor(m/60)+' hr '+m%60+' min':m+' min'}
 function copy(id){navigator.clipboard.writeText($(id).textContent).then(()=>alert('Copied.'))}
+async function shareText(id,title){
+ const text=$(id).textContent||'';
+ if(!text.trim()){alert('Build the report first.');return}
+ if(!navigator.share){alert('Direct Share is not supported here. Use Copy Text instead.');return}
+ try{await navigator.share({title,text})}catch(e){if(e.name!=='AbortError')alert('Could not open Share. Use Copy Text instead.')}
+}
+async function shareTraining(){
+ const text=$('trainout').textContent||'';
+ if(!text.trim()){alert('Build the training report first.');return}
+ if(!navigator.share){alert('Direct Share is not supported here. Use Copy Training Text instead.');return}
+ try{
+   const data={title:'N-200 Cooler Forklift Training Report',text};
+   const files=Array.from($('photo').files||[]);
+   if(files.length && navigator.canShare && navigator.canShare({files})) data.files=files;
+   await navigator.share(data);
+ }catch(e){if(e.name!=='AbortError')alert('Could not open Share. Use Copy Training Text instead.')}
+}
 function renderSetup(){let d=G(KD,dd),p=G(KP,pp);$('dest').innerHTML=d.map(x=>`<option>${x}</option>`).join('');$('destlist').innerHTML=d.map((x,i)=>`<div class=row>${x} <button onclick="delDest(${i})">Delete</button></div>`).join('');$('prodlist').innerHTML=p.map((x,i)=>`<div class=row>${x} <button onclick="delProd(${i})">Delete</button></div>`).join('');$('products').innerHTML='<h4>Pallets Loaded</h4>'+p.map(x=>`<label>${x} pallets</label><input class=pc data-p="${x}" type=number min=0 value=0>`).join('');$('area').innerHTML=ca.map(x=>`<option>${x}</option>`).join('')}
 function addDest(){let v=$('newdest').value.trim(),x=G(KD,dd);if(v&&!x.includes(v))x.push(v);S(KD,x);$('newdest').value='';renderSetup()}function delDest(i){let x=G(KD,dd);x.splice(i,1);S(KD,x);renderSetup()}
 function addProd(){let v=$('newprod').value.trim(),x=G(KP,pp);if(v&&!x.includes(v))x.push(v);S(KP,x);$('newprod').value='';renderSetup()}function delProd(i){let x=G(KP,pp);x.splice(i,1);S(KP,x);renderSetup()}
